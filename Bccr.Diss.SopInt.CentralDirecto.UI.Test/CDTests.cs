@@ -9,10 +9,9 @@ namespace Bccr.Diss.SopInt.CD.UI.Tests
     public class CDTests
     {
         private readonly IWebDriver driver = Factory.driver;
-        [Fact]
         private void Login()
         {
-            WebDriverWait wait = new WebDriverWait(driver, TimeSpan.FromSeconds(25));
+            WebDriverWait wait = new WebDriverWait(driver, TimeSpan.FromSeconds(35));
 
             //Cargar Central Directo Pruebas
             driver.Navigate().GoToUrl($"{Factory.serverName}{Factory.homeUrl}");
@@ -71,10 +70,38 @@ namespace Bccr.Diss.SopInt.CD.UI.Tests
             //Seleccionar menu Registro de Accionistas
             wait.Until(ExpectedConditions.ElementToBeClickable(By.XPath("//*[@id=\"si_2\"]"))).Click();
 
-            Factory.Pause(10);
-            driver.Dispose();
-        }
+            AgregueUnaPausaDecorativa();
 
+            //Marcar opción Autorizacion
+            var laOpcionAutorizacion = wait.Until(ExpectedConditions.ElementToBeClickable(By.XPath("//*[@id=\"FIDFiduciarioAutoriz\"]")));
+            new Actions(driver).MoveToElement(laOpcionAutorizacion).Perform();
+
+            AgregueUnaPausaDecorativa();
+
+            //Seleccionar opción autorizacion
+            laOpcionAutorizacion.Click();
+
+            AgregueUnaPausaDecorativa();
+
+            //Agregar una autorizacion
+            wait.Until(ExpectedConditions.ElementToBeClickable(By.XPath("//*[@id=\"6\"]"))).Click(); 
+        }
+        [Fact]
+        private void EjecuteLaPrueba()
+        {
+            try
+            {
+                Login();
+                Factory.Pause(10);
+            }
+            catch (Exception laExcepcion)
+            {
+                throw laExcepcion;
+            }
+            finally {
+                driver.Dispose();
+            }
+        }
         private static void AgregueUnaPausaDecorativa()
         {
             Factory.Pause(3); //Pausa decorativa para apreciar las acciones, se puede eliminar.            
